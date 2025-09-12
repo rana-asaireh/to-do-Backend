@@ -12,13 +12,14 @@ const allowedOrigins = [
   'https://to-do-frontend-lg4xxg1jz-rana-asairehs-projects.vercel.app'
 ];
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true); 
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+  origin:  function(origin, callback) {
+    if (!origin) return callback(null, true);
+    const normalizedOrigin = origin.replace(/\/$/, '');
+    if (allowedOrigins.some(url => url.replace(/\/$/, '') === normalizedOrigin)) {
+      return callback(null, true);
     }
-    return callback(null, true);
+    const msg = `CORS error: origin ${origin} not allowed`;
+    return callback(new Error(msg), false);
   },
   credentials: true,
 }));
