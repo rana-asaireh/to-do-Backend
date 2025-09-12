@@ -8,7 +8,7 @@ import tasksRoutes from './modules/tasks/tasksRoutes.js';
 const app = express();
 
 app.use(cors({
-  origin: 'to-do-frontend-9ysgdjycr-rana-asairehs-projects.vercel.app',
+  origin: 'https:to-do-frontend-9ysgdjycr-rana-asairehs-projects.vercel.app',
   credentials: true,
 }));
 
