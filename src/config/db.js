@@ -13,4 +13,3 @@ export const sequelize = new Sequelize(
     dialect: dbConfig.dialect,
   }
 );
-
