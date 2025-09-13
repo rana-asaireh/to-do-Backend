@@ -56,7 +56,7 @@ export const sequelize = new Sequelize(
       ssl: {
         ca: fs.readFileSync(process.env.DB_SSL_CA_PATH),
       },
-      connectTimeout: 10000, 
+      connectTimeout: 15000, 
     },
   }
 );
