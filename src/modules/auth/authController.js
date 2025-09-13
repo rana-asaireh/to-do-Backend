@@ -52,6 +52,7 @@ export const login = async (req, res) => {
       sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       path: '/',
+      domain: 'to-do-backend-f9k1.onrender.com',
     };
 
     
@@ -93,6 +94,7 @@ export const refreshAccessToken = async (req, res) => {
       sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000, 
       path: '/',
+      domain: 'to-do-backend-f9k1.onrender.com',
     };
 
     // Set new refresh token in cookie
@@ -126,6 +128,7 @@ export const logout = async (req, res) => {
       sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/',
+      domain: 'to-do-backend-f9k1.onrender.com',
     };
 
     res.clearCookie('refreshToken', cookieOptions);
