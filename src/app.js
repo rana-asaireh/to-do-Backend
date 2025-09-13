@@ -18,6 +18,7 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function(origin, callback) {
+    console.log('Incoming request origin:', origin);
     // allow server-to-server requests like Postman (no origin)
     if (!origin) return callback(null, true);
 
