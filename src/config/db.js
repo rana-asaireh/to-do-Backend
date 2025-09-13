@@ -43,6 +43,7 @@ import config from './config.js';
 const env = process.env.NODE_ENV || 'production';
 const dbConfig = config[env];
 
+console.log(fs.existsSync("/run/secrets/CA_PEM")); 
 export const sequelize = new Sequelize(
   dbConfig.database,
   dbConfig.username,
@@ -55,8 +56,9 @@ export const sequelize = new Sequelize(
     dialectOptions: {
       ssl: {
         ca: fs.readFileSync('/run/secrets/ca.pem'),
+         rejectUnauthorized: true,
       },
-      connectTimeout: 20000, 
+      connectTimeout: 100000, 
     },
   }
 );
