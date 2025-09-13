@@ -82,15 +82,37 @@ export const refreshAccessToken = async (req, res) => {
 
 
 
+// export const logout = async (req, res) => {
+//   const token = req.cookies.refreshToken;
+//   const user = await service.findUserByRefreshToken(token);
+
+//   if (user) {
+//     await service.updateRefreshToken(user, null);
+//   }
+
+//   res.clearCookie('refreshToken').json({ message: 'Logged out' });
+// };
 export const logout = async (req, res) => {
-  const token = req.cookies.refreshToken;
-  const user = await service.findUserByRefreshToken(token);
+  try {
+    const token = req.cookies.refreshToken;
+    const user = await service.findUserByRefreshToken(token);
 
-  if (user) {
-    await service.updateRefreshToken(user, null);
+    if (user) {
+      await service.updateRefreshToken(user, null);
+    }
+
+    res.clearCookie('refreshToken', {
+      httpOnly: true,     
+      secure: true,       
+      sameSite: 'none',    
+      path: '/',           
+    });
+
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Logout failed' });
   }
-
-  res.clearCookie('refreshToken').json({ message: 'Logged out' });
 };
 
 

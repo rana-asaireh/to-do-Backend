@@ -7,22 +7,45 @@ import tasksRoutes from './modules/tasks/tasksRoutes.js';
 
 const app = express();
 
+// const allowedOrigins = [
+//   'https://to-do-frontend-mu-plum.vercel.app',
+//   'https://to-do-frontend-lg4xxg1jz-rana-asairehs-projects.vercel.app'
+// ];
+// app.use(cors({
+//   origin:  function(origin, callback) {
+//     if (!origin) return callback(null, true);
+//     const normalizedOrigin = origin.replace(/\/$/, '');
+//     if (allowedOrigins.some(url => url.replace(/\/$/, '') === normalizedOrigin)) {
+//       return callback(null, true);
+//     }
+//     const msg = `CORS error: origin ${origin} not allowed`;
+//     return callback(new Error(msg), false);
+//   },
+//   credentials: true,
+// }));
 const allowedOrigins = [
   'https://to-do-frontend-mu-plum.vercel.app',
   'https://to-do-frontend-lg4xxg1jz-rana-asairehs-projects.vercel.app'
 ];
+
 app.use(cors({
-  origin:  function(origin, callback) {
-    if (!origin) return callback(null, true);
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // allow Postman / server requests
     const normalizedOrigin = origin.replace(/\/$/, '');
     if (allowedOrigins.some(url => url.replace(/\/$/, '') === normalizedOrigin)) {
       return callback(null, true);
     }
-    const msg = `CORS error: origin ${origin} not allowed`;
-    return callback(new Error(msg), false);
+    return callback(new Error(`CORS error: origin ${origin} not allowed`), false);
   },
-  credentials: true,
+  credentials: true, 
 }));
+
+// Preflight OPTIONS requests
+app.options('*', cors({ origin: allowedOrigins, credentials: true }));
+
+
+
+
 
 app.use(express.json());
 app.use(cookieParser());
