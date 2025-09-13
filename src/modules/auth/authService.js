@@ -50,11 +50,12 @@ export const validateUserPassword = async (user, password) => {
 };
 
 export const updateRefreshToken = async (user, refreshToken) => {
-  user.refreshToken = refreshToken;
+  user.refreshToken = refreshToken || null;
   await user.save();
 };
 
 export const findUserByRefreshToken = async (token) => {
+  if (!token) return null;
   return await User.findOne({ where: { refreshToken: token } });
 };
 
