@@ -5,7 +5,7 @@ import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '.
 
 
 export const register = async (req, res) => {
-  const { fullName,userPassword, email} = req.body;
+  const { fullName, userPassword, email } = req.body;
 
   try {
     const existingUser = await service.findUserByEmail(email);
@@ -13,7 +13,7 @@ export const register = async (req, res) => {
       return res.status(409).json({ message: 'Email already registered' });
     }
 
- 
+
     const newUser = await service.createUser({
       fullName,
       userPassword,
@@ -75,14 +75,22 @@ export const login = async (req, res) => {
 
     await service.updateRefreshToken(user, refreshToken);
 
+    // const cookieOptions = {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production',
+    //   sameSite: 'lax',
+    //   maxAge: 7 * 24 * 60 * 60 * 1000, 
+    //   path: '/',
+    // };
     const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000, 
+      secure: process.env.NODE_ENV === 'production', // must be HTTPS in production
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // cross-domain
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       path: '/',
     };
 
+    
     res.cookie('refreshToken', refreshToken, cookieOptions);
     res.json({ accessToken });
   } catch (error) {
@@ -107,6 +115,22 @@ export const login = async (req, res) => {
 //     res.status(403).json({ message: 'Token invalid or expired' });
 //   }
 // };
+// export const refreshAccessToken = async (req, res) => {
+//   const token = req.cookies.refreshToken;
+//   if (!token) return res.status(401).json({ message: 'No refresh token provided' });
+
+//   try {
+//     const user = await service.findUserByRefreshToken(token);
+//     if (!user) return res.status(403).json({ message: 'Invalid refresh token' });
+
+//     verifyRefreshToken(token);
+//     const newAccessToken = generateAccessToken(user);
+//     res.json({ accessToken: newAccessToken });
+//   } catch (err) {
+//     console.error('Refresh token error:', err);
+//     res.status(403).json({ message: 'Token invalid or expired' });
+//   }
+// };
 export const refreshAccessToken = async (req, res) => {
   const token = req.cookies.refreshToken;
   if (!token) return res.status(401).json({ message: 'No refresh token provided' });
@@ -115,8 +139,29 @@ export const refreshAccessToken = async (req, res) => {
     const user = await service.findUserByRefreshToken(token);
     if (!user) return res.status(403).json({ message: 'Invalid refresh token' });
 
+    // Verify existing token
     verifyRefreshToken(token);
+
+    // Generate new tokens
     const newAccessToken = generateAccessToken(user);
+    const newRefreshToken = generateRefreshToken(user);
+
+    // Update refresh token in DB
+    await service.updateRefreshToken(user, newRefreshToken);
+
+    // Cookie options (same as login)
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', 
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', 
+      maxAge: 7 * 24 * 60 * 60 * 1000, 
+      path: '/',
+    };
+
+    // Set new refresh token in cookie
+    res.cookie('refreshToken', newRefreshToken, cookieOptions);
+
+    // Send new access token
     res.json({ accessToken: newAccessToken });
   } catch (err) {
     console.error('Refresh token error:', err);
@@ -164,8 +209,8 @@ export const logout = async (req, res) => {
 
 
 export const getMyProfile = (req, res) => {
-  const user = { ...req.user }; 
-   res.json(user);
+  const user = { ...req.user };
+  res.json(user);
 }
 
 
