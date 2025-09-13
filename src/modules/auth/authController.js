@@ -30,37 +30,6 @@ export const register = async (req, res) => {
 
 
 
-
-
-// export const login = async (req, res) => {
-//   console.log('Login payload:', req.body);
-//   const { email,userPassword } = req.body;
-
-//   try {
-//     const user = await service.findUserByEmail(email);
-//      console.log('User found:', user); 
-//     if (!user || !(await service.validateUserPassword(user, userPassword))) {
-//       return res.status(401).json({ message: 'Invalid username or password' });
-//     }
-
-//     const accessToken = generateAccessToken(user);
-//     const refreshToken = generateRefreshToken(user);
-
-//     await service.updateRefreshToken(user, refreshToken);
-
-//     res
-//       .cookie('refreshToken', refreshToken, {
-//         httpOnly: true,
-//         secure: false,
-//         sameSite: 'lax',
-//         maxAge: 7 * 24 * 60 * 60 * 1000,
-//       })
-//       .json({ accessToken });
-//   } catch (error) {
-//     console.error('Login error:', error);
-//     res.status(500).json({ message: 'Server error during login' });
-//   }
-// };
 export const login = async (req, res) => {
   const { email, userPassword } = req.body;
 
@@ -75,13 +44,6 @@ export const login = async (req, res) => {
 
     await service.updateRefreshToken(user, refreshToken);
 
-    // const cookieOptions = {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === 'production',
-    //   sameSite: 'lax',
-    //   maxAge: 7 * 24 * 60 * 60 * 1000, 
-    //   path: '/',
-    // };
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // must be HTTPS in production
@@ -100,37 +62,8 @@ export const login = async (req, res) => {
 };
 
 
-// export const refreshAccessToken = async (req, res) => {
-//   const token = req.cookies.refreshToken;
-//   if (!token) return res.sendStatus(401);
 
-//   try {
-//     const user = await service.findUserByRefreshToken(token);
-//     if (!user) return res.sendStatus(403);
 
-//     verifyRefreshToken(token);
-//     const newAccessToken = generateAccessToken(user);
-//     res.json({ accessToken: newAccessToken });
-//   } catch (err) {
-//     res.status(403).json({ message: 'Token invalid or expired' });
-//   }
-// };
-// export const refreshAccessToken = async (req, res) => {
-//   const token = req.cookies.refreshToken;
-//   if (!token) return res.status(401).json({ message: 'No refresh token provided' });
-
-//   try {
-//     const user = await service.findUserByRefreshToken(token);
-//     if (!user) return res.status(403).json({ message: 'Invalid refresh token' });
-
-//     verifyRefreshToken(token);
-//     const newAccessToken = generateAccessToken(user);
-//     res.json({ accessToken: newAccessToken });
-//   } catch (err) {
-//     console.error('Refresh token error:', err);
-//     res.status(403).json({ message: 'Token invalid or expired' });
-//   }
-// };
 export const refreshAccessToken = async (req, res) => {
   const token = req.cookies.refreshToken;
   if (!token) return res.status(401).json({ message: 'No refresh token provided' });
@@ -171,16 +104,6 @@ export const refreshAccessToken = async (req, res) => {
 
 
 
-// export const logout = async (req, res) => {
-//   const token = req.cookies.refreshToken;
-//   const user = await service.findUserByRefreshToken(token);
-
-//   if (user) {
-//     await service.updateRefreshToken(user, null);
-//   }
-
-//   res.clearCookie('refreshToken').json({ message: 'Logged out' });
-// };
 export const logout = async (req, res) => {
   try {
     const token = req.cookies.refreshToken;
