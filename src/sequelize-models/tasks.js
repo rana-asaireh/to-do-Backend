@@ -20,7 +20,8 @@ export default function(sequelize, DataTypes) {
     },
     dueDate: {
       type: DataTypes.DATE, 
-      allowNull: true       
+      allowNull: true,
+      field: 'duedate'        
     },
     // Foreign key for user relationship
     user_id: {
