@@ -43,22 +43,16 @@ import config from './config.js';
 const env = process.env.NODE_ENV || 'production';
 const dbConfig = config[env];
 
-console.log(fs.existsSync("/etc/secrets/CA_PEM")); 
+
 export const sequelize = new Sequelize(
   dbConfig.database,
   dbConfig.username,
   dbConfig.password,
   {
     host: dbConfig.host,
-    port: parseInt(dbConfig.port),
+    port: parseInt(dbConfig.port) || 5432,
     dialect: dbConfig.dialect,
     logging: false,
-    dialectOptions: {
-      ssl: {
-        ca: process.env.DB_SSL_CA_PATH,
-         rejectUnauthorized: true,
-      },
-      connectTimeout: 100000, 
-    },
+    dialectOptions: dbConfig.dialectOptions || {}
   }
 );
