@@ -46,8 +46,6 @@ export const login = async (req, res) => {
 
     const cookieOptions = {
       httpOnly: true,
-      // secure: process.env.NODE_ENV === 'production', 
-      // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       secure: true,       
       sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
@@ -87,8 +85,6 @@ export const refreshAccessToken = async (req, res) => {
     // Cookie options (same as login)
     const cookieOptions = {
       httpOnly: true,
-      // secure: process.env.NODE_ENV === 'production', 
-      // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', 
       secure: true,       
       sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000, 
@@ -107,35 +103,6 @@ export const refreshAccessToken = async (req, res) => {
 };
 
 
-
-// export const logout = async (req, res) => {
-//   try {
-//     const token = req.cookies.refreshToken;
-//     if (!token) return res.status(400).json({ message: 'No refresh token provided' });
-
-//     const user = await service.findUserByRefreshToken(token);
-//     if (user) {
-//       await service.updateRefreshToken(user, null);
-//     }
-
-//     const cookieOptions = {
-//       httpOnly: true,
-//       // secure: process.env.NODE_ENV === 'production',
-//       // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-//       secure: true,       
-//       sameSite: 'None',
-//       maxAge: 7 * 24 * 60 * 60 * 1000,
-//       path: '/',
-//       domain: 'to-do-backend-f9k1.onrender.com',
-//     };
-
-//     res.clearCookie('refreshToken', cookieOptions);
-//     res.status(200).json({ message: 'Logged out successfully' });
-//   } catch (err) {
-//     console.error('Logout error:', err);
-//     res.status(500).json({ message: 'Logout failed' });
-//   }
-// };
 
 export const logout = async (req, res) => {
   try {
