@@ -46,8 +46,10 @@ export const login = async (req, res) => {
 
     const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // must be HTTPS in production
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // cross-domain
+      // secure: process.env.NODE_ENV === 'production', 
+      // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: true,       
+      sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       path: '/',
     };
@@ -85,8 +87,10 @@ export const refreshAccessToken = async (req, res) => {
     // Cookie options (same as login)
     const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', 
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', 
+      // secure: process.env.NODE_ENV === 'production', 
+      // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', 
+      secure: true,       
+      sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000, 
       path: '/',
     };
@@ -116,8 +120,10 @@ export const logout = async (req, res) => {
 
     const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      // secure: process.env.NODE_ENV === 'production',
+      // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: true,       
+      sameSite: 'None',
       path: '/',
     };
 
