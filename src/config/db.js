@@ -25,7 +25,7 @@ export const sequelize = new Sequelize(
   dbConfig.password,
   {
     host: dbConfig.host,
-    port: dbConfig.port || 3306, 
+    port: dbConfig.port, 
     dialect: dbConfig.dialect,
     logging: false,
     dialectOptions: {
