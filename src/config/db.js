@@ -1,3 +1,18 @@
+// import config from './config.js';
+// import { Sequelize } from 'sequelize';
+
+// const env = process.env.NODE_ENV || 'production';
+// const dbConfig = config[env];
+
+// export const sequelize = new Sequelize(
+//   dbConfig.database,
+//   dbConfig.username,
+//   dbConfig.password,
+//   {
+//     host: dbConfig.host,
+//     dialect: dbConfig.dialect,
+//   }
+// );
 import config from './config.js';
 import { Sequelize } from 'sequelize';
 
@@ -10,6 +25,14 @@ export const sequelize = new Sequelize(
   dbConfig.password,
   {
     host: dbConfig.host,
+    port: dbConfig.port || 3306, 
     dialect: dbConfig.dialect,
+    logging: false,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false, 
+      },
+    },
   }
 );
