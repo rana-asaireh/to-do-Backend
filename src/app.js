@@ -47,30 +47,51 @@ app.set('trust proxy', 1);
 
 // // Preflight OPTIONS requests
 // app.options('*', cors({ origin: allowedOrigins, credentials: true }));
-app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true); // allow Postman / server requests
-    const normalizedOrigin = origin.replace(/\/$/, '');
-    if (allowedOrigins.some(url => url.replace(/\/$/, '') === normalizedOrigin)) {
-      return callback(null, true);
-    }
-    return callback(new Error(`CORS error: origin ${origin} not allowed`), false);
-  },
-  credentials: true,
-}));
+// app.use(cors({
+//   origin: function(origin, callback) {
+//     if (!origin) return callback(null, true); // allow Postman / server requests
+//     const normalizedOrigin = origin.replace(/\/$/, '');
+//     if (allowedOrigins.some(url => url.replace(/\/$/, '') === normalizedOrigin)) {
+//       return callback(null, true);
+//     }
+//     return callback(new Error(`CORS error: origin ${origin} not allowed`), false);
+//   },
+//   credentials: true,
+// }));
 
-app.options('*', cors({
+// app.options('*', cors({
+//   origin: function(origin, callback) {
+//     if (!origin) return callback(null, true);
+//     const normalizedOrigin = origin.replace(/\/$/, '');
+//     if (allowedOrigins.some(url => url.replace(/\/$/, '') === normalizedOrigin)) {
+//       return callback(null, true);
+//     }
+//     return callback(new Error(`CORS error: origin ${origin} not allowed`), false);
+//   },
+//   credentials: true,
+// }));
+const allowedOrigins = [
+  'https://to-do-frontend-mu-plum.vercel.app',
+  'https://to-do-frontend-lg4xxg1jz-rana-asairehs-projects.vercel.app'
+];
+
+const corsOptions = {
   origin: function(origin, callback) {
+    // allow server-to-server requests like Postman (no origin)
     if (!origin) return callback(null, true);
+
     const normalizedOrigin = origin.replace(/\/$/, '');
-    if (allowedOrigins.some(url => url.replace(/\/$/, '') === normalizedOrigin)) {
+    if (allowedOrigins.includes(normalizedOrigin)) {
       return callback(null, true);
     }
-    return callback(new Error(`CORS error: origin ${origin} not allowed`), false);
+    // Reject requests from unknown origins
+    return callback(null, false); // do NOT throw new Error
   },
   credentials: true,
-}));
+};
 
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 
 
